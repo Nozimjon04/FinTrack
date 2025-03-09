@@ -9,14 +9,23 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="~/" />
+
+    <!-- Bootstrap -->
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+
+    <!-- Site styles -->
     <link href="css/site.css" rel="stylesheet" />
     <link href="FinTrack.Web.styles.css" rel="stylesheet" />
-    <link rel="icon" type="image/png" href="favicon.png"/>
-    <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
+
+    <!-- FontAwesome for Icons (ADD THIS PART) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+          integrity="sha384-..." crossorigin="anonymous">
+
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <component type="typeof(HeadOutlet)" render-mode="Server" />
 </head>
 <body>
-    <component type="typeof(App)" render-mode="ServerPrerendered" />
+    <component type="typeof(App)" render-mode="Server" />
 
     <div id="blazor-error-ui">
         <environment include="Staging,Production">

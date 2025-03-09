@@ -1,0 +1,165 @@
+﻿@page "/register"
+@inject AuthService AuthService
+@inject NavigationManager Nav
+
+<div class="container d-flex align-items-center justify-content-center vh-100">
+    <div class="card shadow-lg p-5 text-center register-card">
+        <div class="icon-container">
+            <i class="fas fa-folder-plus text-primary"></i>
+        </div>
+        <h2 class="mb-3 text-gradient">Register for <strong>FinTrack</strong></h2>
+        <p class="text-muted">Create an account to start managing your expenses!</p>
+
+        @if (!string.IsNullOrEmpty(message))
+        {
+            <div class="alert @(isSuccess ? "alert-success" : "alert-danger") fade-in">
+                @message
+            </div>
+        }
+
+        <div class="form-group">
+            <input class="form-control input-field mb-3" @bind="fullName" placeholder="Full Name" />
+            <input class="form-control input-field mb-3" @bind="email" type="email" placeholder="Email" />
+
+            <!-- Password Field with Inside Icon -->
+            <div class="position-relative">
+                <input class="form-control input-field pr-5" @bind="password" type="@passwordFieldType" placeholder="Password" />
+                <span class="password-icon" @onclick="TogglePassword">
+                    <i class="@passwordIcon"></i>
+                </span>
+            </div>
+
+            <button class="btn btn-primary btn-lg btn-glow w-100 mt-3" @onclick="RegisterAsync">
+                <i class="fas fa-user-plus"></i> Register
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .register-card {
+        width: 420px;
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.15);
+        animation: fadeIn 0.8s ease-in-out;
+    }
+
+    .icon-container {
+        font-size: 50px;
+        color: #007bff;
+        margin-bottom: 10px;
+    }
+
+    .text-gradient {
+        background: linear-gradient(to right, #007bff, #6610f2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: bold;
+    }
+
+    .input-field {
+        border-radius: 8px;
+        padding: 12px;
+        font-size: 16px;
+        width: 100%;
+    }
+
+    .position-relative {
+        position: relative;
+    }
+
+    .password-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        font-size: 18px;
+        color: #888;
+        transition: color 0.3s ease-in-out;
+    }
+
+    .password-icon:hover {
+        color: #007bff;
+    }
+
+    .btn-glow {
+        transition: all 0.3s ease-in-out;
+        border-radius: 8px;
+        padding: 12px;
+        font-size: 16px;
+    }
+
+    .btn-glow:hover {
+        transform: translateY(-2px);
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .fade-in {
+        animation: fadeIn 0.8s ease-in-out;
+    }
+
+    keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+@code {
+    private string fullName;
+    private string email;
+    private string password;
+    private string message;
+    private bool isSuccess = false;
+
+    private string passwordFieldType = "password";
+    private string passwordIcon = "fas fa-eye"; // Default icon (eye closed)
+
+    private void TogglePassword()
+    {
+        if (passwordFieldType == "password")
+        {
+            passwordFieldType = "text";
+            passwordIcon = "fas fa-eye-slash"; // Open eye when visible
+        }
+        else
+        {
+            passwordFieldType = "password";
+            passwordIcon = "fas fa-eye"; // Closed eye when hidden
+        }
+    }
+
+    private async Task RegisterAsync()
+    {
+        try
+        {
+            var user = new UserForCreationDto { FullName = fullName, Email = email, Password = password };
+            Response result = await AuthService.RegisterAsync(user);
+
+            if (result.Code == 200)
+            {
+                isSuccess = true;
+                message = result.Message;
+                Nav.NavigateTo("/dashboard", true); // Redirect to the main app page
+
+            }
+            else
+            {
+                isSuccess = false;
+                message = result.Message;
+            }
+        }
+        catch (Exception ex)
+        {
+            isSuccess = false;
+            message = ex.Message;
+        }
+    }
+}

@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34322.80
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinTrack.Web", "FinTrack.Web\FinTrack.Web.csproj", "{7F6AECC6-00C4-44C4-B36C-2CB43EF1E4C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinTrack.Web", "FinTrack.Web\FinTrack.Web.csproj", "{7F6AECC6-00C4-44C4-B36C-2CB43EF1E4C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinTrack.Api", "FinTrack.Api\FinTrack.Api.csproj", "{AB45AA99-3A6F-4695-9F5F-474BF5C6C046}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinTrack.Api", "FinTrack.Api\FinTrack.Api.csproj", "{AB45AA99-3A6F-4695-9F5F-474BF5C6C046}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

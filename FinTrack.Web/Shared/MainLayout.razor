@@ -1,17 +1,33 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager Nav
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>FinTrack.Web</PageTitle>
 
+@code {
+    private bool IsAuthenticated = false;
+    private bool HideSidebar = false; // 🛑 NEW: Hide sidebar for certain pages
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        IsAuthenticated = authState.User.Identity?.IsAuthenticated ?? false;
+
+        // Hide sidebar for Login & Register pages
+        var currentUrl = Nav.Uri.ToLower();
+        HideSidebar = currentUrl.Contains("/login") || currentUrl.Contains("/register");
+    }
+}
+
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+    @if (IsAuthenticated && !HideSidebar) // ✅ Show sidebar only if authenticated & not on login/register pages
+    {
+        <div class="sidebar">
+            <NavMenu />
+        </div>
+    }
 
     <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
-
         <article class="content px-4">
             @Body
         </article>

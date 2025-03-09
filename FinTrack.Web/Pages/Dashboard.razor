@@ -1,0 +1,18 @@
+﻿@page "/dashboard"
+@attribute [Authorize]
+
+<h3>Welcome to FinTrack</h3>
+<p>You are now logged in!</p>
+
+<button @onclick="Logout">Logout</button>
+
+@code {
+    [Inject] private AuthService AuthService { get; set; }
+    [Inject] private NavigationManager Nav { get; set; }
+
+    private async Task Logout()
+    {
+        await AuthService.LogoutAsync();
+        Nav.NavigateTo("/");
+    }
+}
