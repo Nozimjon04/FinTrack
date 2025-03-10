@@ -158,6 +158,25 @@ public class ExpenseService : IExpenseService
 
     }
 
+    public async Task<IEnumerable<ExpenseForStatisticsDto>> RetrieveMonthlyStatisticsAsync(CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            await SetAuthorizationHeader();
+            var response = await _httpClient.GetFromJsonAsync<Response>("/api/expenses/statistics");
+            var expenseStatistics = JsonSerializer.Deserialize<IEnumerable<ExpenseForStatisticsDto>>(response.Data.ToString(), new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+            return expenseStatistics;
+
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("An error occurred while retrieving the monthly statistics. Please try again.", ex);
+        }
+    }
+
     public async Task<PagedResponse<IEnumerable<ExpenseForResultDto>>> SearchByNameAsync(string name, int page, int pageSize, CancellationToken cancellationToken = default)
     {
         try

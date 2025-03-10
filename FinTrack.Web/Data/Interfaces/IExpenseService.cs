@@ -12,4 +12,5 @@ public interface IExpenseService
     Task<PagedResponse<IEnumerable<ExpenseForResultDto>>> RetrieveByCategoryIdAsync(long categoryId, int page, int pageSize, CancellationToken cancellationToken = default);
     Task<PagedResponse<IEnumerable<ExpenseForResultDto>>> SearchByNameAsync(string name, int page, int pageSize, CancellationToken cancellationToken = default);
     Task<PagedResponse<IEnumerable<ExpenseForResultDto>>> RetrieveAllAsync(int page, int pageSize, CancellationToken cancellationToken = default);
+    Task<IEnumerable<ExpenseForStatisticsDto>> RetrieveMonthlyStatisticsAsync(CancellationToken cancellationToken = default);
 }

@@ -66,4 +66,12 @@ public class ExpensesController(IExpenseService expenseService) : BaseController
             Message = "Success",
             Data = await expenseService.SearchByNameAsync(name, @params, cancellationToken)
         });
+    [HttpGet("statistics")]
+    public async Task<IActionResult> GetMonthlyStatisticsAsync(CancellationToken cancellationToken = default)
+        => Ok(new Response
+        {
+            Code = 200,
+            Message = "Success",
+            Data = await expenseService.RetrieveMonthlyStatisticsAsync(cancellationToken)
+        });
 }

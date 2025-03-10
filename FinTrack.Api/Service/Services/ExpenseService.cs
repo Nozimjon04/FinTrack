@@ -91,6 +91,25 @@ public class ExpenseService : IExpenseService
         return this.mapper.Map<ExpenseForResultDto>(entity);
     }
 
+    public async Task<IEnumerable<ExpenseForStatisticsDto>> RetrieveMonthlyStatisticsAsync(CancellationToken cancellationToken = default)
+    {
+        var entities = await this.expenseRepository.SelectAll()
+            .Where(e => e.UserId == HttpContextHelper.UserId.Value)
+            .AsNoTracking()
+            .GroupBy(e => new { e.CreatedAt.Year, e.CreatedAt.Month })
+            .Select(g => new ExpenseForStatisticsDto
+            {
+                Year = g.Key.Year,
+                Month = g.Key.Month,
+                TotalAmount = g.Sum(e => e.Amount)
+            })
+            .OrderByDescending(e => e.Year)
+            .ThenByDescending(e => e.Month)
+            .ToListAsync();
+
+        return entities;
+    }
+
     public async Task<IEnumerable<ExpenseForResultDto>> SearchByNameAsync(string name, PaginationParams @params,CancellationToken cancellationToken = default)
     {
         var entities = await this.expenseRepository.SelectAll()

@@ -8,7 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
-    <PackageReference Include="BootstrapBlazor" Version="7.0.2" />
+    <PackageReference Include="Blazorise" Version="1.7.5" />
+    <PackageReference Include="ChartJs.Blazor" Version="1.1.0" />
   </ItemGroup>
 
 </Project>

@@ -12,4 +12,5 @@ public interface IExpenseService
     Task<bool> DeleteAsync(long id, CancellationToken cancellationToken = default);
     Task<IEnumerable<ExpenseForResultDto>> RetrieveByCategoryIdAsync(long categoryId, PaginationParams @params, CancellationToken cancellationToken = default);
     Task<IEnumerable<ExpenseForResultDto>> SearchByNameAsync(string name, PaginationParams @params, CancellationToken cancellationToken = default);
+    Task<IEnumerable<ExpenseForStatisticsDto>> RetrieveMonthlyStatisticsAsync(CancellationToken cancellationToken = default);
 }
