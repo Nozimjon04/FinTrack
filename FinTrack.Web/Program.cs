@@ -1,5 +1,6 @@
 using Blazored.LocalStorage;
 using FinTrack.Web.Data;
+using FinTrack.Web.Data.Interfaces;
 using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,8 +18,15 @@ builder.Services.AddHttpClient("Api", client =>
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
+builder.Services.AddScoped<IExpenseService, ExpenseService>();
+builder.Services.AddScoped<IExpenseCategoryService, ExpenseCategoryService>();
 
 builder.Services.AddAuthorizationCore();
+builder.Services.AddLogging(logging =>
+{
+    logging.SetMinimumLevel(LogLevel.Debug); // ?? Enable more logs
+});
+
 
 var app = builder.Build();
 

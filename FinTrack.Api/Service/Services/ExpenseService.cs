@@ -6,6 +6,8 @@ using FinTrack.Api.Data.IRepositories;
 using FinTrack.Api.Service.Interfaces;
 using FinTrack.Api.Service.DTOs.Expenses;
 using FinTrack.Api.Helpers;
+using FinTrack.Api.Domain.Configurations;
+using FinTrack.Api.Service.Extensions;
 
 namespace FinTrack.Api.Service.Services;
 
@@ -52,11 +54,25 @@ public class ExpenseService : IExpenseService
         return await this.expenseRepository.SaveChangeAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<ExpenseForResultDto>> RetrieveAllAsync(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<ExpenseForResultDto>> RetrieveAllAsync(PaginationParams @params, CancellationToken cancellationToken = default)
     {
         var entities = await this.expenseRepository.SelectAll()
             .Where(ec => ec.UserId == HttpContextHelper.UserId.Value)
+            .Include(e => e.ExpenseCategory)
             .AsNoTracking()
+            .ToPagedList(@params)
+            .ToListAsync(cancellationToken);
+
+        return this.mapper.Map<IEnumerable<ExpenseForResultDto>>(entities);
+    }
+
+    public async Task<IEnumerable<ExpenseForResultDto>> RetrieveByCategoryIdAsync(long categoryId, PaginationParams @params, CancellationToken cancellationToken = default)
+    {
+        var entities = await this.expenseRepository.SelectAll()
+            .Where(e => e.ExpenseCategoryId == categoryId && e.UserId == HttpContextHelper.UserId.Value)
+            .Include(e => e.ExpenseCategory)
+            .AsNoTracking()
+            .ToPagedList(@params)
             .ToListAsync(cancellationToken);
 
         return this.mapper.Map<IEnumerable<ExpenseForResultDto>>(entities);
@@ -66,12 +82,25 @@ public class ExpenseService : IExpenseService
     {
         var entity = await this.expenseRepository.SelectAll()
             .Where(e => e.Id == id)
+            .Include(e => e.ExpenseCategory)
             .AsNoTracking()
             .FirstOrDefaultAsync(cancellationToken);
         if (entity is null)
             throw new CustomException(404, $"Expense with {id} not found");
 
         return this.mapper.Map<ExpenseForResultDto>(entity);
+    }
+
+    public async Task<IEnumerable<ExpenseForResultDto>> SearchByNameAsync(string name, PaginationParams @params,CancellationToken cancellationToken = default)
+    {
+        var entities = await this.expenseRepository.SelectAll()
+            .Where(e => e.Description.ToLower().Contains(name.ToLower()) && e.UserId == HttpContextHelper.UserId.Value)
+            .Include(e => e.ExpenseCategory)
+            .AsNoTracking()
+            .ToPagedList(@params)
+            .ToListAsync(cancellationToken);
+
+        return this.mapper.Map<IEnumerable<ExpenseForResultDto>>(entities);
     }
 
     public async Task<bool> UpdateAsync(long id, ExpenseForUpdateDto dto, CancellationToken cancellationToken = default)

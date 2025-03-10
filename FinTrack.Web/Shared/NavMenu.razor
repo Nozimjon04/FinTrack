@@ -16,30 +16,73 @@
     </div>
     <div class="@NavMenuCssClass nav-scrollable">
         <nav class="flex-column">
+            <div class="nav-item px-3">
+                <NavLink class="nav-link d-flex align-items-center" href="profile">
+                    <i class="fas fa-user-circle me-2"></i>
+                    <span>Profile</span>
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link d-flex align-items-center" href="dashboard">
+                    <i class="fas fa-chart-line me-2"></i>
+                    <span>Dashboard</span>
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link d-flex align-items-center" href="expense-categories">
+                    <i class="fas fa-folder-open me-2"></i>
+                    <span>Expense Categories</span>
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link d-flex align-items-center" href="expenses">
+                    <i class="fas fa-money-bill-wave me-2"></i>
+                    <span>Expenses</span>
+                </NavLink>
+            </div>
+
             
+
             <div class="nav-item px-3">
-                <NavLink class="nav-link" href="dashboard">
-                    <span class="oi oi-dashboard" aria-hidden="true"></span> Dashboard
-                </NavLink>
-            </div>
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="expenses">
-                    <span class="oi oi-dollar" aria-hidden="true"></span> Expenses
-                </NavLink>
-            </div>
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="expense-categories">
-                    <span class="oi oi-folder" aria-hidden="true"></span> Expense Categories
-                </NavLink>
-            </div>
-            <div class="nav-item px-3">
-                <button class="nav-link btn btn-link text-danger" @onclick="Logout">
-                    <span class="oi oi-account-logout" aria-hidden="true"></span> Logout
+                <button class="nav-link btn btn-link text-danger d-flex align-items-center" @onclick="Logout">
+                    <i class="fas fa-sign-out-alt me-2"></i>
+                    <span>Logout</span>
                 </button>
             </div>
+
         </nav>
     </div>
 }
+
+
+<style>
+    .nav-link {
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        padding: 10px;
+        transition: background 0.3s ease-in-out;
+    }
+
+        .nav-link i {
+            font-size: 20px;
+            color: #ffffff;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+
+    .text-danger i {
+        color: red;
+    }
+
+    
+</style>
     
 
 @code {

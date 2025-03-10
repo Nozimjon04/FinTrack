@@ -41,7 +41,7 @@ public class AuthService
             }
 
             // Extract token if present and store it
-            var token = responseContent.Data?.ToString();
+            var token = responseContent.Data.ToString();
             if (!string.IsNullOrEmpty(token))
             {
                 await _localStorage.SetItemAsync("authToken", token);
@@ -71,17 +71,18 @@ public class AuthService
 
             var responseContent = await response.Content.ReadFromJsonAsync<Response>();
 
+
             if (!response.IsSuccessStatusCode)
             {
                 return new Response
                 {
                     Code = responseContent.Code,
                     Message = responseContent.Message,
-                    Data = responseContent.Data
+                    Data = responseContent.Data.ToString()
                 };
             }
 
-            var token = await response.Content.ReadAsStringAsync();
+            var token = responseContent.Data.ToString();
 
             await _localStorage.SetItemAsync("authToken", token);
             ((CustomAuthStateProvider)_authStateProvider).NotifyUserAuthentication(token);

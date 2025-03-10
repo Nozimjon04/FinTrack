@@ -1,0 +1,236 @@
+﻿@page "/expense-categories"
+@inject IExpenseCategoryService ExpenseCategoryService
+@inject NavigationManager Nav
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <h3 class="text-title"><i class="fas fa-folder-open"></i> Expense Categories</h3>
+        <button class="btn btn-primary btn-rounded" @onclick="AddCategory">
+            <i class="fas fa-plus"></i> Add Category
+        </button>
+    </div>
+
+    <div class="card shadow-sm mt-3 p-3">
+        <input type="text" class="form-control input-field" placeholder="Enter category name" @bind="newCategoryName">
+    </div>
+
+    <div class="card shadow-sm mt-4">
+        <div class="card-body">
+            <table class="table table-hover custom-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var category in expenseCategories.Select((value, index) => new { value, index }))
+                    {
+                        <tr>
+                            <td>@(category.index + 1)</td> <!-- Index starts from 1 -->
+                            <td>
+                                @if (category.value.IsEditing)
+                                {
+                                    <input type="text" class="form-control" @bind="category.value.EditingName">
+                                }
+                                else
+                                {
+                                    <span class="category-text">@category.value.Name</span>
+                                }
+                            </td>
+                            <td>
+                                @if (category.value.IsEditing)
+                                {
+                                    <button class="btn btn-success btn-sm btn-soft" @onclick="() => SaveEdit(category.value)">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                    <button class="btn btn-light btn-sm btn-soft" @onclick="() => CancelEdit(category.value)">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-outline-primary btn-sm btn-soft" @onclick="() => EditCategory(category.value)">
+                                        <i class="fas fa-pen"></i>
+                                    </button>
+                                    <button class="btn btn-outline-danger btn-sm btn-soft" @onclick="() => DeleteCategory(category.value.Id)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modern UI Styling -->
+<style>
+    .text-title {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .btn-rounded {
+        border-radius: 50px;
+        padding: 8px 20px;
+        font-weight: bold;
+    }
+
+    .input-field {
+        border-radius: 8px;
+        font-size: 16px;
+        padding: 10px;
+    }
+
+    .custom-table {
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+        .custom-table th {
+            background: #007bff;
+            color: white;
+            padding: 12px;
+            border: none;
+        }
+
+        .custom-table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+    .category-text {
+        font-weight: 600;
+        color: #333;
+        transition: color 0.3s ease-in-out;
+    }
+
+        .category-text:hover {
+            color: #007bff;
+        }
+
+    .btn-soft {
+        border-radius: 6px;
+        font-weight: bold;
+        transition: all 0.3s ease-in-out;
+    }
+
+        .btn-soft:hover {
+            transform: scale(1.05);
+        }
+</style>
+
+@code {
+    private List<ExpenseCategoryModel> expenseCategories = new();
+    private string newCategoryName;
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCategories();
+    }
+
+    private async Task LoadCategories()
+    {
+        try
+        {
+            var response = await ExpenseCategoryService.RetrieveAllAsync();
+            expenseCategories = response.Select(c => new ExpenseCategoryModel
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    IsEditing = false
+                }).ToList();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
+
+    private async Task AddCategory()
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(newCategoryName))
+            {
+                errorMessage = "Category name cannot be empty.";
+                return;
+            }
+
+            var response = await ExpenseCategoryService.AddAsync(new ExpenseCategoryForCreationDto { Name = newCategoryName });
+            if (response.Code == 200)
+            {
+                newCategoryName = "";
+                await LoadCategories();
+            }
+            else
+            {
+                errorMessage = response.Message;
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
+
+    private void EditCategory(ExpenseCategoryModel category)
+    {
+        category.IsEditing = true;
+        category.EditingName = category.Name;
+    }
+
+    private async Task SaveEdit(ExpenseCategoryModel category)
+    {
+        try
+        {
+            var response = await ExpenseCategoryService.UpdateAsync(category.Id, new ExpenseCategoryForUpdateDto { Name = category.EditingName });
+            if (response.Code == 200)
+            {
+                category.Name = category.EditingName;
+                category.IsEditing = false;
+            }
+            else
+                errorMessage = response.Message;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
+
+    private void CancelEdit(ExpenseCategoryModel category)
+    {
+        category.IsEditing = false;
+    }
+
+    private async Task DeleteCategory(long id)
+    {
+        try
+        {
+            var response = await ExpenseCategoryService.DeleteAsync(id);
+            if (response.Code == 200)
+                expenseCategories.RemoveAll(c => c.Id == id);
+            else
+                errorMessage = response.Message;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
+
+    private class ExpenseCategoryModel
+    {
+        public long Id { get; set; }
+        public string Name { get; set; }
+        public bool IsEditing { get; set; }
+        public string EditingName { get; set; }
+    }
+}
