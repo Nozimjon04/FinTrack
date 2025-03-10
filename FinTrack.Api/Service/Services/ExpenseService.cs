@@ -60,6 +60,7 @@ public class ExpenseService : IExpenseService
             .Where(ec => ec.UserId == HttpContextHelper.UserId.Value)
             .Include(e => e.ExpenseCategory)
             .AsNoTracking()
+            .OrderByDescending(e => e.Id)
             .ToPagedList(@params)
             .ToListAsync(cancellationToken);
 
@@ -72,6 +73,7 @@ public class ExpenseService : IExpenseService
             .Where(e => e.ExpenseCategoryId == categoryId && e.UserId == HttpContextHelper.UserId.Value)
             .Include(e => e.ExpenseCategory)
             .AsNoTracking()
+            .OrderByDescending(e => e.Id)
             .ToPagedList(@params)
             .ToListAsync(cancellationToken);
 
@@ -103,8 +105,8 @@ public class ExpenseService : IExpenseService
                 Month = g.Key.Month,
                 TotalAmount = g.Sum(e => e.Amount)
             })
-            .OrderByDescending(e => e.Year)
-            .ThenByDescending(e => e.Month)
+            .OrderBy(e=> e.Year)
+            .ThenBy(e => e.Month)
             .ToListAsync();
 
         return entities;

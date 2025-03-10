@@ -1,4 +1,6 @@
-﻿namespace FinTrack.Api.Service.DTOs.Users;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace FinTrack.Api.Service.DTOs.Users;
 
 public class UserForCreationDto
 {

@@ -2,6 +2,5 @@
 
 public class UserForUpdateDto
 {
-
     public required string FullName { get; set; }
 }

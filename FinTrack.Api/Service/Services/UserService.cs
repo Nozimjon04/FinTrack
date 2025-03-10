@@ -6,6 +6,7 @@ using FinTrack.Api.Service.DTOs.Users;
 using FinTrack.Api.Service.Exceptions;
 using FinTrack.Api.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace FinTrack.Api.Service.Services;
 
@@ -35,6 +36,8 @@ public class UserService : IUserService
 
     public async Task<string> RegisterAsync(UserForCreationDto dto, CancellationToken cancellationToken = default)
     {
+        if (!IsValidEmail(dto.Email))
+            throw new CustomException(400, "Invalid email format");
         var user = await this.userRepository.SelectAll()
             .Where(u => u.Email == dto.Email)
             .AsNoTracking()
@@ -76,4 +79,8 @@ public class UserService : IUserService
 
         return await this.userRepository.SaveChangeAsync(cancellationToken);
     }
+    private bool IsValidEmail(string email)
+        => new EmailAddressAttribute().IsValid(email);
+    
+        
 }

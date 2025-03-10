@@ -1,14 +1,177 @@
 ﻿@page "/dashboard"
 @attribute [Authorize]
+@inject IExpenseService expenseService
+@inject NavigationManager Nav
+@inject IJSRuntime JSRuntime
+@inject AuthService AuthService
 
-<h3>Welcome to FinTrack</h3>
-<p>You are now logged in!</p>
+<!-- Top Navigation Bar -->
+<div class="navbar">
+    <h1 class="title">FinTrack</h1>
+    <button class="logout-btn" @onclick="Logout">
+        <i class="material-icons"></i> Logout
+    </button>
+</div>
 
-<button @onclick="Logout">Logout</button>
+<!-- Welcome Message -->
+<div class="welcome-section">
+    <h2>Welcome to <span class="brand-name">FinTrack</span></h2>
+    <p>You are now logged in!</p>
+</div>
+
+<!-- Summary Cards -->
+<div class="cards-container">
+    <div class="card">
+        <h3>Total Expenses</h3>
+        <p>@expenses.Sum(e => e.TotalAmount).ToString("C")</p>
+    </div>
+    <div class="card">
+        <h3>Highest Expense Month</h3>
+        <p>@(expenses.OrderByDescending(e => e.TotalAmount).FirstOrDefault()?.Month + "/" + expenses.OrderByDescending(e => e.TotalAmount).FirstOrDefault()?.Year)</p>
+    </div>
+    <div class="card">
+        <h3>Average Monthly Expenses</h3>
+        <p>@(expenses.Any() ? expenses.Average(e => e.TotalAmount).ToString("C") : "$0")</p>
+    </div>
+</div>
+
+<!-- Chart Section -->
+<div class="chart-container">
+    <canvas id="expenseChart"></canvas>
+</div>
+
+<style>
+
+/* General Layout */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Navbar Title */
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Logout Button */
+.logout-btn {
+    background: #ff4d4d;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.logout-btn:hover {
+    background: #cc0000;
+}
+
+/* Welcome Section */
+.welcome-section {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.welcome-section h2 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+}
+
+.welcome-section .brand-name {
+    color: #007bff;
+}
+
+.welcome-section p {
+    font-size: 16px;
+    color: #666;
+}
+
+/* Cards Layout */
+.cards-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 220px;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 22px;
+    font-weight: bold;
+    color: #007bff;
+}
+
+/* Chart Section */
+.chart-container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    margin: auto;
+    margin-top: 30px;
+}
+
+</style> 
 
 @code {
-    [Inject] private AuthService AuthService { get; set; }
-    [Inject] private NavigationManager Nav { get; set; }
+    private List<ExpenseForStatisticsDto> expenses = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        expenses = (await expenseService.RetrieveMonthlyStatisticsAsync()).ToList();
+        await RenderChart();
+    }
+
+    private async Task RenderChart()
+    {
+        var labels = expenses.Select(e => $"{e.Month}/{e.Year}").ToArray();
+        var data = expenses.Select(e => e.TotalAmount).ToArray();
+
+        await JSRuntime.InvokeVoidAsync("renderChart", "expenseChart", labels, data);
+    }
 
     private async Task Logout()
     {

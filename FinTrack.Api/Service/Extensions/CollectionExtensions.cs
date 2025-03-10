@@ -25,7 +25,7 @@ public static class CollectionExtensions
 
         return @params.PageIndex > 0 && @params.PageSize > 0 ?
             entities
-            .OrderBy(e => e.Id)
+            .OrderByDescending(e => e.Id)
             .Skip((@params.PageIndex - 1) * @params.PageSize).Take(@params.PageSize)
             : throw new CustomException(400, "Please, enter valid numbers");
     }
