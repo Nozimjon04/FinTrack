@@ -4,14 +4,14 @@
 @attribute [Authorize]
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center">
-        <h3 class="text-title"><i class="fas fa-folder-open"></i> Expense Categories</h3>
+        <h3 class="text-title"><i class="fas fa-folder-open"></i> Xarajatlar kategoriyalari</h3>
         <button class="btn btn-primary btn-rounded" @onclick="AddCategory">
-            <i class="fas fa-plus"></i> Add Category
+            <i class="fas fa-plus"></i> Kategoriya qo‘shish
         </button>
     </div>
 
     <div class="card shadow-sm mt-3 p-3">
-        <input type="text" class="form-control input-field" placeholder="Enter category name" @bind="newCategoryName">
+        <input type="text" class="form-control input-field" placeholder="Kategoriya nomini kiriting" @bind="newCategoryName">
     </div>
 
     <div class="card shadow-sm mt-4">
@@ -20,8 +20,8 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Actions</th>
+                        <th>Nomi</th>
+                        <th>Harakatlar</th>
                     </tr>
                 </thead>
                 <tbody>

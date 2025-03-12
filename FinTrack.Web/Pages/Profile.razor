@@ -4,8 +4,8 @@
 @inject NavigationManager Nav
 
 <div class="profile-container">
-    <h3 class="profile-title">Profile</h3>
-    <p class="profile-subtitle">Manage your personal settings</p>
+    <h3 class="profile-title">Profil</h3>
+    <p class="profile-subtitle">Shaxsiy sozlamalaringizni boshqaring</p>
 
     @if (user != null)
     {
@@ -21,11 +21,11 @@
                 <DataAnnotationsValidator />
 
                 <div class="form-group">
-                    <label>Full Name:</label>
+                    <label>Ism-familya:</label>
                     <InputText @bind-Value="user.FullName" class="form-control" />
                 </div>
 
-                <button type="submit" class="btn btn-primary">Update Profile</button>
+                <button type="submit" class="btn btn-primary">Profilni yangilash</button>
             </EditForm>
 
             @if (!string.IsNullOrEmpty(message))

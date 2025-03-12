@@ -15,22 +15,22 @@
 
 <!-- Welcome Message -->
 <div class="welcome-section">
-    <h2>Welcome to <span class="brand-name">FinTrack</span></h2>
-    <p>You are now logged in!</p>
+    <h2><span class="brand-name">FinTrack</span> ga xush kelibsiz</h2>
+    <p>Siz endi tizimga kirdingiz!</p>
 </div>
 
 <!-- Summary Cards -->
 <div class="cards-container">
     <div class="card">
-        <h3>Total Expenses</h3>
+        <h3>Umumiy xarajatlar</h3>
         <p>@expenses.Sum(e => e.TotalAmount).ToString("C")</p>
     </div>
     <div class="card">
-        <h3>Highest Expense Month</h3>
+        <h3>Eng yuqori xarajat oyi</h3>
         <p>@(expenses.OrderByDescending(e => e.TotalAmount).FirstOrDefault()?.Month + "/" + expenses.OrderByDescending(e => e.TotalAmount).FirstOrDefault()?.Year)</p>
     </div>
     <div class="card">
-        <h3>Average Monthly Expenses</h3>
+        <h3>O‘rtacha oylik xarajatlar</h3>
         <p>@(expenses.Any() ? expenses.Average(e => e.TotalAmount).ToString("C") : "$0")</p>
     </div>
 </div>

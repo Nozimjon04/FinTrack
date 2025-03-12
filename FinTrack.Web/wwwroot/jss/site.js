@@ -5,7 +5,7 @@
         data: {
             labels: labels,
             datasets: [{
-                label: "Monthly Expenses",
+                label: "Oylik xarajatlar",
                 data: data,
                 backgroundColor: "rgba(54, 162, 235, 0.7)",
                 borderColor: "rgba(54, 162, 235, 1)",

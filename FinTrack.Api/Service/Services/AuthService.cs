@@ -21,7 +21,7 @@ public class AuthService(IConfiguration configuration) : IAuthService
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:SecretKey"]));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
         var tokenDescriptor = new JwtSecurityToken(configuration["Jwt:Issuer"], configuration["Jwt:Audience"], claims,
-            expires: DateTime.Now.AddMinutes(double.Parse(configuration["Jwt:Lifetime"])),
+            expires: DateTime.Now.AddDays(double.Parse(configuration["Jwt:Lifetime"])),
             signingCredentials: credentials);
 
         return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);

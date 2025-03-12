@@ -7,7 +7,7 @@
 <div class="container mt-4">
     <!-- Title and Add Button -->
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3 class="text-title"><i class="fas fa-receipt"></i> Expenses</h3>
+        <h3 class="text-title"><i class="fas fa-receipt"></i> Xarajatlar</h3>
         <button class="btn btn-primary fab-btn" @onclick="ShowAddModal">
             <i class="fas fa-plus"></i>
         </button>
@@ -27,14 +27,14 @@
             <div class="col-md-6 mb-3 mb-md-0">
                 <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-search"></i></span>
-                    <input type="text" class="form-control input-field" placeholder="Search expenses" @onchange="SearchExpenses" />
+                    <input type="text" class="form-control input-field" placeholder="Xarajatlarni qidirish" @onchange="SearchExpenses" />
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-filter"></i></span>
                     <select class="form-select input-field" @onchange="FilterByCategory">
-                        <option value="0">All Categories</option>
+                        <option value="0">Barcha kategoriyalar</option>
                         @foreach (var category in expenseCategories)
                         {
                             <option value="@category.Id">@category.Name</option>
@@ -51,18 +51,18 @@
             <thead class="table-header">
                 <tr>
                     <th>#</th>
-                    <th>Category</th>
-                    <th>Amount</th>
-                    <th>Description</th>
-                    <th>Date</th>
-                    <th>Actions</th>
+                    <th>Kategoriya</th>
+                    <th>Miqdor</th>
+                    <th>Tavsif</th>
+                    <th>Sana</th>
+                    <th>Harakatlar</th>
                 </tr>
             </thead>
             <tbody>
                 @if (!expenses.Any())
                 {
                     <tr>
-                        <td colspan="6" class="text-center text-muted">No expenses found.</td>
+                        <td colspan="6" class="text-center text-muted">Hech qanday xarajat topilmadi.</td>
                     </tr>
                 }
                 else
@@ -108,14 +108,14 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">@(isEditing ? "Edit Expense" : "Add Expense")</h5>
+                        <h5 class="modal-title">@(isEditing ? "Xarajatlarni tahrirlash" : "Xarajat qo‘shish")</h5>
                         <button type="button" class="btn-close" @onclick="CloseModal"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label class="form-label">Category</label>
+                            <label class="form-label">Kategoriya</label>
                             <select class="form-select" @bind="selectedExpense.ExpenseCategoryId">
-                                <option value="0">Select a category</option>
+                                <option value="0">Kategoriyani tanlang</option>
                                 @foreach (var category in expenseCategories)
                                 {
                                     <option value="@category.Id">@category.Name</option>
@@ -123,17 +123,17 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Amount</label>
+                            <label class="form-label">Miqdor</label>
                             <input type="number" class="form-control" @bind="selectedExpense.Amount" />
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Description</label>
+                            <label class="form-label">Tavsif</label>
                             <input type="text" class="form-control" @bind="selectedExpense.Description" />
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" @onclick="CloseModal">Close</button>
-                        <button type="button" class="btn btn-primary" @onclick="SaveExpense">Save</button>
+                        <button type="button" class="btn btn-secondary" @onclick="CloseModal">Yopish</button>
+                        <button type="button" class="btn btn-primary" @onclick="SaveExpense">Saqlash</button>
                     </div>
                 </div>
             </div>
